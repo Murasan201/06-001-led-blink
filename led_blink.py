@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """
-LED点灯アプリ - LED Blink Application
-Raspberry Pi GPIOを使用してLEDを点滅させるプログラム
-
-文書番号: 06-001
+LED点灯アプリ
+Raspberry Pi GPIOを使用してLEDを点滅させるPythonアプリケーション
+要件定義書: 06-001_LED点灯アプリ_要件定義書.md
 """
 
 import argparse
@@ -14,7 +13,9 @@ from datetime import datetime
 from gpiozero import LED, GPIOPinInUse
 
 class LEDBlinker:
-    """LED制御クラス - GPIO操作とLED点滅制御を管理"""
+    """LED制御クラス
+    GPIO操作とLED点滅制御を一括管理する初心者向けのシンプルな実装
+    """
     
     def __init__(self, pin=17, interval=1.0, count=None):
         """LEDBlinkerクラスの初期化
@@ -32,7 +33,11 @@ class LEDBlinker:
         self.running = True         # 実行状態フラグ
         
     def setup_gpio(self):
-        """GPIO初期化 - 指定されたピンをLED制御用に設定"""
+        """GPIO初期化
+
+        指定されたピンをLED制御用に設定し、LEDオブジェクトを作成します。
+        エラーが発生した場合はプログラムを終了します。
+        """
         try:
             # gpiozeroライブラリを使用してLEDオブジェクトを作成
             self.led = LED(self.pin)
@@ -47,27 +52,44 @@ class LEDBlinker:
             sys.exit(1)
     
     def cleanup(self):
-        """GPIO終了処理 - リソースを適切にクリーンアップ"""
+        """GPIO終了処理
+
+        LEDオブジェクトを閉じてGPIOリソースを適切にクリーンアップします。
+        """
         if self.led:
             # LEDオブジェクトを閉じてGPIOリソースを解放
             self.led.close()
             print("\nGPIO cleanup completed")
     
     def signal_handler(self, signum, frame):
-        """シグナルハンドラ - Ctrl+C等の割り込み処理"""
+        """シグナルハンドラ
+
+        Ctrl+C等の割り込み信号を受け取り、実行フラグを False に設定して
+        安全にループを終了します。
+        """
         print("\nInterrupt received, stopping LED blink...")
         # 実行フラグをFalseにして安全にループを終了
         self.running = False
     
     def log_blink_status(self, status):
-        """点滅状況をログ出力 - タイムスタンプ付きで状態を記録"""
+        """点滅状況をログ出力
+
+        タイムスタンプ付きで LED の状態（ON/OFF）とカウンタを記録します。
+
+        Args:
+            status (str): LED の状態（'ON' または 'OFF'）
+        """
         # 現在時刻を取得してフォーマット
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         # LED状態とカウンタをログ出力
         print(f"[{timestamp}] Blink #{self.blink_counter}: LED {status}")
     
     def blink_led(self):
-        """LED点滅実行 - メインの点滅ロジック"""
+        """LED点滅実行
+
+        メインの点滅ロジックを実行します。
+        設定された間隔と回数に基づいて LED を点灯・消灯します。
+        """
         # 実行設定の表示
         print(f"Starting LED blink on GPIO pin {self.pin}")
         print(f"Interval: {self.interval}s")
@@ -113,7 +135,13 @@ class LEDBlinker:
             print(f"LED blink completed. Total blinks: {self.blink_counter}")
 
 def parse_arguments():
-    """コマンドライン引数の解析 - 各種パラメータを設定"""
+    """コマンドライン引数の解析
+
+    ユーザーが指定した各種パラメータ（ピン番号、間隔、回数）を解析して返します。
+
+    Returns:
+        argparse.Namespace: 解析されたコマンドライン引数
+    """
     parser = argparse.ArgumentParser(
         description="LED点灯アプリ - Raspberry Pi GPIO LED Blink Application",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -151,7 +179,14 @@ def parse_arguments():
     return parser.parse_args()
 
 def validate_arguments(args):
-    """引数の妥当性検証 - 入力値の範囲と形式をチェック"""
+    """引数の妥当性検証
+
+    コマンドライン引数の入力値の範囲と形式をチェックします。
+    不正な値の場合はエラーメッセージを表示してプログラムを終了します。
+
+    Args:
+        args (argparse.Namespace): 検証するコマンドライン引数
+    """
     # GPIOピン番号の範囲チェック（Raspberry Pi の有効範囲）
     if args.pin < 1 or args.pin > 40:
         print("Error: GPIO pin number must be between 1 and 40")
@@ -168,7 +203,11 @@ def validate_arguments(args):
         sys.exit(1)
 
 def main():
-    """メイン関数 - アプリケーションのエントリーポイント"""
+    """メイン関数
+
+    コマンドライン引数を処理してアプリケーションを実行します。
+    LED点滅のセットアップと実行を統括します。
+    """
     # コマンドライン引数の解析と検証
     args = parse_arguments()
     validate_arguments(args)

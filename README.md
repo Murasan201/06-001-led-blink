@@ -1,7 +1,11 @@
 # LED Blink Application
 
 ## Overview
-A Python application for controlling LED blinking using Raspberry Pi 5 GPIO pins. This project serves as hands-on educational material for programming beginners to learn the basics of GPIO control and electronics.
+A simple Python application for controlling LED using Raspberry Pi 5 GPIO pins. This project serves as hands-on educational material for programming beginners to learn the basics of GPIO control and electronics.
+
+This project includes two simple programs:
+- `led_simple.py`: Turns LED on for 3 seconds, then off for 1 second
+- `led_blink.py`: Blinks LED continuously at 0.5-second intervals
 
 ## Required Hardware
 - Raspberry Pi 5
@@ -23,8 +27,9 @@ A Python application for controlling LED blinking using Raspberry Pi 5 GPIO pins
 pip3 install gpiozero
 ```
 
-2. Make the script executable:
+2. Make the scripts executable:
 ```bash
+chmod +x led_simple.py
 chmod +x led_blink.py
 ```
 
@@ -54,32 +59,22 @@ GND (Pin 6)    ----------------------------
 
 ## Usage
 
-### Basic Usage Examples
+### Simple LED Control (led_simple.py)
+Turn on LED for 3 seconds, then turn off for 1 second:
 ```bash
-# Run with default settings (GPIO17, 1-second interval, infinite loop)
-python3 led_blink.py
-
-# Use GPIO18
-python3 led_blink.py --pin 18
-
-# 0.5-second interval blinking
-python3 led_blink.py --interval 0.5
-
-# Blink 10 times then exit
-python3 led_blink.py --count 10
-
-# Combine multiple options
-python3 led_blink.py --pin 18 --interval 0.5 --count 20
+python3 led_simple.py
 ```
 
-### Command Line Arguments
-- `--pin`: GPIO pin number to use (default: 17)
-- `--interval`: Blink interval in seconds (default: 1.0)
-- `--count`: Number of blinks (omit for infinite loop)
+### Continuous LED Blinking (led_blink.py)
+Blink LED continuously at 0.5-second intervals:
+```bash
+python3 led_blink.py
+```
 
 ### Stopping Execution
-- Press Ctrl+C to safely stop execution
-- The program automatically cleans up GPIO resources
+- For `led_simple.py`: Runs automatically and exits after completion
+- For `led_blink.py`: Press Ctrl+C to safely stop execution
+- Both programs automatically clean up GPIO resources
 
 ## Troubleshooting
 
@@ -87,12 +82,14 @@ python3 led_blink.py --pin 18 --interval 0.5 --count 20
 
 1. **"Permission denied" error**
    ```bash
+   sudo python3 led_simple.py
+   # or
    sudo python3 led_blink.py
    ```
 
 2. **"GPIO pin is already in use" error**
    - Another process may be using the same GPIO pin
-   - Try specifying a different pin number
+   - Reboot Raspberry Pi to release GPIO resources
 
 3. **LED doesn't light up**
    - Check wiring (especially GND connection)
@@ -106,15 +103,15 @@ python3 led_blink.py --pin 18 --interval 0.5 --count 20
 
 ## Learning Points
 1. **Basic GPIO Control**: Digital output for LED control
-2. **Python Programming**: Class design, exception handling, signal processing
+2. **Python Programming**: Function design, exception handling, try-finally structure
 3. **Electronic Circuits**: LED circuit basics, resistor functionality
-4. **Command Line**: Argument processing with argparse
+4. **Resource Management**: Proper GPIO cleanup
 
 ## Extension Ideas
+- Add command-line arguments to control blink interval
 - Control multiple LEDs
 - Brightness adjustment using PWM
-- Temperature sensor integration
-- Web interface addition
+- Add different blink patterns
 
 ## License
 This project is released under the MIT License. See the LICENSE file for details.
